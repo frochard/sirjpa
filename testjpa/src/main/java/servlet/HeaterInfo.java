@@ -3,14 +3,12 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import domain.Heater;
 import domain.Home;
 import jpa.EntityManagerHelper;
@@ -52,7 +50,7 @@ public class HeaterInfo extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		String query = "select h from Heater as h";
-		List result2 = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		List<Heater> result2 = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
 		out.println("<HTML>\n<BODY>\n" +
 				"<H1>Recapitulatif des informations</H1>\n" +
 				"<UL>\n");

@@ -110,7 +110,7 @@ public class JpaTest {
 		CriteriaQuery query = cb.createQuery(Person.class);
 		Root from = query.from(Person.class);
 		query.select(from).where(cb.equal(from.get("name"), "Toto"));
-		List result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		List<Person> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
 		for (Object enregistrement : result) {
 			System.out.println("enregistrement : " + enregistrement);
 		}

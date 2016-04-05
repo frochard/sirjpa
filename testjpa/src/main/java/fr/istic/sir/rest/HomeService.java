@@ -2,7 +2,6 @@ package fr.istic.sir.rest;
 
 import java.util.Collection;
 import java.util.List;
-
 import javax.persistence.EntityTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -22,7 +21,7 @@ public class HomeService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Home> getHomes() {
 		String query = "select h from Home as h";
-		List result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		List<Home> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
 		EntityManagerHelper.closeEntityManager();
 		return result;
 	}

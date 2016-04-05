@@ -3,6 +3,7 @@ package fr.istic.sir.rest;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.EntityTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -11,7 +12,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import domain.ElectronicDevice;
 import domain.Person;
 import jpa.EntityManagerHelper;
@@ -23,7 +23,8 @@ public class ElectronicDeviceService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<ElectronicDevice> getElectronicDevices() {
 		String query = "select e from SmartDevice as e where dtype = 'Electronic Device'";
-		List result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		List<ElectronicDevice> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		EntityManagerHelper.closeEntityManager();
 		return result;
 	}
 
@@ -31,9 +32,11 @@ public class ElectronicDeviceService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes (MediaType.APPLICATION_JSON)
 	public ElectronicDevice create(ElectronicDevice e) {
-		EntityManagerHelper.getEntityManager().getTransaction().begin();
+		EntityTransaction t = EntityManagerHelper.getEntityManager().getTransaction();
+		t.begin();
 		EntityManagerHelper.getEntityManager().persist(e);
-		EntityManagerHelper.getEntityManager().getTransaction().commit();
+		t.commit();
+		EntityManagerHelper.closeEntityManager();
 		return e;
 	}
 
@@ -41,15 +44,11 @@ public class ElectronicDeviceService {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void delete(@PathParam("id") String arg0) {
-		String query = "select e from SmartDevice as e where e.id="+Integer.parseInt(arg0);
-		List<ElectronicDevice> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
-		if (result.size()!=0){
-			ElectronicDevice electronicDeviceTest= result.get(0);
-			EntityManagerHelper.getEntityManager().getTransaction().begin();
-			electronicDeviceTest = EntityManagerHelper.getEntityManager().merge(electronicDeviceTest);
-			EntityManagerHelper.getEntityManager().remove(electronicDeviceTest);
-			EntityManagerHelper.getEntityManager().getTransaction().commit();
-		}
+		EntityTransaction t = EntityManagerHelper.getEntityManager().getTransaction();
+		t.begin();
+		EntityManagerHelper.getEntityManager().remove(EntityManagerHelper.getEntityManager().find(ElectronicDevice.class,Long.parseLong(arg0)));
+		t.commit();
+		EntityManagerHelper.getEntityManager().close();//On ferme l'em pour corriger bug affichage mais pas bonne pratique car couteux
 	}
 
 	@GET
@@ -61,8 +60,8 @@ public class ElectronicDeviceService {
 		if (result.size()==0){
 			return null;
 		}else{
-			ElectronicDevice electronicDeviceTest= result.get(0);
-			return electronicDeviceTest;			
+			ElectronicDevice electronicDevice= result.get(0);
+			return electronicDevice;			
 		}
 	}
 
@@ -77,9 +76,10 @@ public class ElectronicDeviceService {
 		}else{
 			Person personTest= result.get(0);
 			personTest.setName("Test update REST");
-			EntityManagerHelper.getEntityManager().getTransaction().begin();
+			EntityTransaction t = EntityManagerHelper.getEntityManager().getTransaction();
+			t.begin();
 			personTest = EntityManagerHelper.getEntityManager().merge(personTest);
-			EntityManagerHelper.getEntityManager().getTransaction().commit();
+			t.commit();
 			return personTest;
 		}
 	}

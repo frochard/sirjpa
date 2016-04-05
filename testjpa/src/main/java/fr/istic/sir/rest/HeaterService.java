@@ -3,6 +3,7 @@ package fr.istic.sir.rest;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.EntityTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,6 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import domain.ElectronicDevice;
 import domain.Heater;
 import jpa.EntityManagerHelper;
 
@@ -22,7 +24,8 @@ public class HeaterService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Heater> getHeaters() {
 		String query = "select s from SmartDevice as s where dtype = 'Heater'";
-		List result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		List<Heater> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		EntityManagerHelper.closeEntityManager();
 		return result;
 	}
 
@@ -30,9 +33,11 @@ public class HeaterService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes (MediaType.APPLICATION_JSON)
 	public Heater create(Heater h) {
-		EntityManagerHelper.getEntityManager().getTransaction().begin();
+		EntityTransaction t = EntityManagerHelper.getEntityManager().getTransaction();
+		t.begin();
 		EntityManagerHelper.getEntityManager().persist(h);
-		EntityManagerHelper.getEntityManager().getTransaction().commit();
+		t.commit();
+		EntityManagerHelper.closeEntityManager();
 		return h;
 	}
 
@@ -40,15 +45,11 @@ public class HeaterService {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void delete(@PathParam("id") String arg0) {
-		String query = "select h from SmartDevice as h where h.id="+Integer.parseInt(arg0);
-		List<Heater> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
-		if (result.size()!=0){
-			Heater heaterTest= result.get(0);
-			EntityManagerHelper.getEntityManager().getTransaction().begin();
-			heaterTest = EntityManagerHelper.getEntityManager().merge(heaterTest);
-			EntityManagerHelper.getEntityManager().remove(heaterTest);
-			EntityManagerHelper.getEntityManager().getTransaction().commit();
-		}
+		EntityTransaction t = EntityManagerHelper.getEntityManager().getTransaction();
+		t.begin();
+		EntityManagerHelper.getEntityManager().remove(EntityManagerHelper.getEntityManager().find(Heater.class,Long.parseLong(arg0)));
+		t.commit();
+		EntityManagerHelper.getEntityManager().close();//On ferme l'em pour corriger bug affichage mais pas bonne pratique car couteux
 	}
 
 	@GET
@@ -60,8 +61,8 @@ public class HeaterService {
 		if (result.size()==0){
 			return null;
 		}else{
-			Heater heaterTest= result.get(0);
-			return heaterTest;			
+			Heater heater= result.get(0);
+			return heater;			
 		}
 	}
 
@@ -76,9 +77,10 @@ public class HeaterService {
 		}else{
 			Heater heaterTest= result.get(0);
 			heaterTest.setName("Test update REST");
-			EntityManagerHelper.getEntityManager().getTransaction().begin();
+			EntityTransaction t = EntityManagerHelper.getEntityManager().getTransaction();
+			t.begin();
 			heaterTest = EntityManagerHelper.getEntityManager().merge(heaterTest);
-			EntityManagerHelper.getEntityManager().getTransaction().commit();
+			t.commit();
 			return heaterTest;
 		}
 	}

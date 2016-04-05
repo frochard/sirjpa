@@ -2,7 +2,6 @@ package fr.istic.sir.rest;
 
 import java.util.Collection;
 import java.util.List;
-
 import javax.persistence.EntityTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -22,11 +21,8 @@ public class PersonService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Person> getPeople() {
 		String query = "select p from Person as p";
-		List result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
+		List<Person> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
 		EntityManagerHelper.closeEntityManager();//On ferme l'em pour corriger bug affichage mais pas bonne pratique car couteux
-		System.err.println(result.size());
-		System.err.println(EntityManagerHelper.getEntityManager().hashCode());
-		System.err.println(EntityManagerHelper.getEntityManager());
 		return result;
 	}
 
@@ -62,8 +58,8 @@ public class PersonService {
 		if (result.size()==0){
 			return null;
 		}else{
-			Person personTest= result.get(0);
-			return personTest;			
+			Person person= result.get(0);
+			return person;			
 		}
 	}
 
