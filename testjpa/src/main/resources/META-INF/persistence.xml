@@ -69,7 +69,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.connection.password" value="Cysko.07"/>
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:81/base_21000155"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost/base_21000155"/>
             <property name="hibernate.connection.username" value="user_21000155"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
         </properties>

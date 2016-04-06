@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -11,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
@@ -69,7 +69,7 @@ public class Home {
 		this.nbRoom = nbRoom;
 	}
 
-	@OneToMany(mappedBy="home",cascade=CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="home",cascade=CascadeType.PERSIST)
 	public List<SmartDevice> getHeaters() {
 		return heaters;
 	}
@@ -77,7 +77,7 @@ public class Home {
 		this.heaters = heaters;
 	}
 
-	@OneToMany(mappedBy="home",cascade=CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="home",cascade=CascadeType.PERSIST)
 	public List<SmartDevice> getElectronicDevices() {
 		return electronicDevices;
 	}

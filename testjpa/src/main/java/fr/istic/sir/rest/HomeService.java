@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import domain.Home;
 import jpa.EntityManagerHelper;
 
-@Path("/home")
+@Path("/homes")
 public class HomeService {
 
 	@GET
