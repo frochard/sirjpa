@@ -2,7 +2,6 @@ package fr.istic.sir.rest;
 
 import java.util.Collection;
 import java.util.List;
-
 import javax.persistence.EntityTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -47,7 +46,7 @@ public class HeaterService {
 		t.begin();
 		EntityManagerHelper.getEntityManager().remove(EntityManagerHelper.getEntityManager().find(Heater.class,Long.parseLong(arg0)));
 		t.commit();
-		EntityManagerHelper.getEntityManager().close();//On ferme l'em pour corriger bug affichage mais pas bonne pratique car couteux
+		EntityManagerHelper.closeEntityManager();
 	}
 
 	@GET

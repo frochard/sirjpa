@@ -23,6 +23,7 @@ public class HomeService {
 		String query = "select h from Home as h";
 		List<Home> result = EntityManagerHelper.getEntityManager().createQuery(query).getResultList();
 		EntityManagerHelper.closeEntityManager();
+		System.out.println(result);
 		return result;
 	}
 

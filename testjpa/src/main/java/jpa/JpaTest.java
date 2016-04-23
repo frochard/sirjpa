@@ -26,14 +26,14 @@ public class JpaTest {
 		tx.begin();
 		try {
 			//Peuplement de la base
-			createPerson();
+			//createPerson();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		tx.commit();
 		//Requete sur la base
-		listPerson();
+		//listPerson();
 		EntityManagerHelper.getEntityManager().close();
 		EntityManagerHelper.getEmf().close();
 	}
